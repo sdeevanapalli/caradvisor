@@ -73,7 +73,6 @@ def main():
     with st.sidebar:
         show_logout_button()
 
-# Page display functions removed - using tabs instead
 
 if __name__ == "__main__":
     main()
