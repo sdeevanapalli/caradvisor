@@ -24,7 +24,6 @@ st.set_page_config(
     }
 )
 
-
 st.markdown("""
 <style>
     .main .block-container {
