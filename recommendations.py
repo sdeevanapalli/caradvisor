@@ -368,14 +368,16 @@ Provide a diverse mix covering different categories (hatchback, sedan, SUV, etc.
 
 def display_recommendations():
     """Display AI-generated car recommendations"""
-    st.markdown("## Car Recommendations")
+    st.markdown("## 🚗 Your Personalized Car Recommendations")
     
     # Check if user has completed questionnaire
     if 'user_preferences' not in st.session_state or not st.session_state.user_preferences:
-        st.info("Complete the questionnaire first to get personalized recommendations.")
-        if st.button("Take Questionnaire", key="take_quiz_btn"):
-            st.session_state.questionnaire_step = 0
-            st.rerun()
+        st.warning("🔄 **Please complete the Car Finder Quiz first to get personalized recommendations.**")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("📝 Take Car Finder Quiz", key="take_quiz_btn"):
+                st.session_state.questionnaire_step = 0
+                st.rerun()
         return
     
     # Initialize recommendation engine
@@ -383,50 +385,91 @@ def display_recommendations():
     
     # Generate recommendations if not already generated
     if 'recommendations' not in st.session_state or not st.session_state.recommendations:
-        with st.spinner("Generating recommendations..."):
+        with st.spinner("🤖 **Our AI is analyzing your preferences and finding the perfect cars for you...**"):
+            time.sleep(2)  # Simulate processing time
             recommendations = engine.generate_recommendations(st.session_state.user_preferences)
             st.session_state.recommendations = recommendations
     
     recommendations = st.session_state.recommendations
     
     if not recommendations:
-        st.error("Unable to generate recommendations. Please try again.")
+        st.error("❌ **Unable to generate recommendations. Please try again or contact support.**")
         return
     
+    # Display user preferences summary
+    st.markdown("### 📋 Based on Your Preferences:")
+    with st.expander("👁️ View Your Questionnaire Answers"):
+        prefs = st.session_state.user_preferences
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'budget' in prefs:
+                budget_min, budget_max = prefs['budget']
+                st.write(f"**Budget:** ₹{budget_min:,} - ₹{budget_max:,}")
+            if 'primary_use' in prefs:
+                st.write(f"**Primary Use:** {prefs['primary_use']}")
+            if 'family_size' in prefs:
+                st.write(f"**Family Size:** {prefs['family_size']}")
+            if 'fuel_preference' in prefs:
+                st.write(f"**Fuel Preference:** {prefs['fuel_preference']}")
+        
+        with col2:
+            if 'important_features' in prefs and prefs['important_features']:
+                st.write(f"**Important Features:** {', '.join(prefs['important_features'][:3])}")
+            if 'driving_experience' in prefs:
+                st.write(f"**Driving Experience:** {prefs['driving_experience']}")
+            if 'physical_considerations' in prefs and prefs['physical_considerations']:
+                st.write(f"**Physical Needs:** {', '.join(prefs['physical_considerations'][:2])}")
+    
     # Display recommendations
-    st.markdown("### Recommended Cars:")
+    st.markdown("---")
+    st.markdown("### 🎯 **AI Recommended Cars For You:**")
     
     for i, car in enumerate(recommendations, 1):
         with st.container():
-            st.markdown(f"**{i}. {car.get('brand', 'N/A')} {car.get('model', 'Unknown Model')}**")
+            st.markdown(f"""
+            <div class="car-card">
+            <h3>🏆 Recommendation #{i}: {car.get('model', 'Unknown Model')}</h3>
+            </div>
+            """, unsafe_allow_html=True)
             
             col1, col2 = st.columns([2, 1])
             
             with col1:
-                st.write(f"Price: {car.get('price', 'Contact dealer')}")
-                st.write(car.get('why_suitable', 'Recommended based on your preferences.'))
+                # Main car information
+                st.markdown(f"**🚗 Brand:** {car.get('brand', 'N/A')}")
+                st.markdown(f"**💰 Price Range:** {car.get('price', 'Contact dealer')}")
+                st.markdown(f"**⭐ Senior-Friendly Rating:** {car.get('senior_friendly_rating', 'N/A')}/10")
+                
+                # Why suitable
+                st.markdown("**🎯 Why This Car Suits You:**")
+                st.info(car.get('why_suitable', 'Recommended based on your preferences.'))
                 
                 # Key features
                 if 'key_features' in car and car['key_features']:
-                    st.write("Key Features:")
-                    for feature in car['key_features'][:3]:
-                        st.write(f"• {feature}")
+                    st.markdown("**✨ Key Features:**")
+                    for feature in car['key_features'][:5]:
+                        st.markdown(f"• {feature}")
             
             with col2:
-                # Quick specs
-                if car.get('fuel_efficiency'):
-                    st.write(f"Fuel Efficiency: {car.get('fuel_efficiency')}")
-                if car.get('safety_rating'):
-                    st.write(f"Safety Rating: {car.get('safety_rating')}")
+                # Technical specs
+                st.markdown("**📊 Quick Specs:**")
+                st.metric("Fuel Efficiency", car.get('fuel_efficiency', 'N/A'))
+                st.metric("Safety Rating", car.get('safety_rating', 'N/A'))
+                st.metric("Maintenance Cost", car.get('maintenance_cost', 'N/A'))
                 
-                if st.button(f"Add to Compare", key=f"compare_{i}"):
+                # Action buttons
+                if st.button(f"🔍 Learn More", key=f"learn_more_{i}"):
+                    st.info("🚧 **Detailed information coming soon!**")
+                
+                if st.button(f"⚖️ Add to Compare", key=f"compare_{i}"):
                     if 'comparison_cars' not in st.session_state:
                         st.session_state.comparison_cars = []
                     if car not in st.session_state.comparison_cars:
                         st.session_state.comparison_cars.append(car)
-                        st.success(f"Added {car.get('model', 'car')} to comparison!")
+                        st.success(f"✅ **Added {car.get('model', 'car')} to comparison!**")
                     else:
-                        st.info("Car already in comparison list.")
+                        st.warning("⚠️ **Car already in comparison list.**")
             
             # Pros and cons
             if 'pros' in car or 'cons' in car:
