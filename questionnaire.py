@@ -29,7 +29,7 @@ class CarQuestionnaire:
                     "step": 50000,
                     "format": "₹%d"
                 },
-                "help_text": "Consider total cost including insurance and registration"
+                "help_text": "💡 Consider total cost including insurance, registration, and initial maintenance"
             },
             {
                 "id": "primary_use",
@@ -38,14 +38,15 @@ class CarQuestionnaire:
                 "description": "This helps us understand your main driving needs",
                 "required": True,
                 "options": [
-                    "Daily commuting",
-                    "Weekend drives", 
+                    "Daily city commuting",
+                    "Weekend leisure drives", 
                     "Long distance travel",
-                    "Family outings",
-                    "Occasional use",
+                    "Family outings and shopping",
+                    "Medical appointments and errands",
+                    "Occasional use (2-3 times per week)",
                     "Multiple purposes"
                 ],
-                "help_text": "This affects recommendations for comfort, fuel efficiency, and features"
+                "help_text": "💡 Your primary use affects recommendations for comfort, fuel efficiency, and features"
             },
             {
                 "id": "family_size",
@@ -54,13 +55,13 @@ class CarQuestionnaire:
                 "description": "Including yourself and regular passengers",
                 "required": True,
                 "options": [
-                    "1 person",
-                    "2 people",
-                    "3-4 people",
-                    "5-7 people",
-                    "Varies"
+                    "Just me (1 person)",
+                    "Me and my spouse (2 people)",
+                    "2-4 people regularly",
+                    "5-7 people regularly",
+                    "Need flexibility for varying numbers"
                 ],
-                "help_text": "This determines seating capacity requirements"
+                "help_text": "💡 This determines seating capacity and interior space requirements"
             },
             {
                 "id": "driving_experience",
@@ -69,14 +70,14 @@ class CarQuestionnaire:
                 "description": "This helps us recommend cars that match your comfort level",
                 "required": True,
                 "options": [
-                    "New driver",
+                    "New driver (less than 2 years)",
                     "Experienced city driver",
                     "Experienced highway driver", 
-                    "Very experienced",
+                    "Very experienced (30+ years)",
                     "Prefer easy-to-drive cars",
-                    "Comfortable with any car"
+                    "Comfortable with any car type"
                 ],
-                "help_text": "This helps recommend cars with appropriate handling"
+                "help_text": "💡 We'll recommend cars with appropriate ease of handling"
             },
             {
                 "id": "fuel_preference",
@@ -85,14 +86,14 @@ class CarQuestionnaire:
                 "description": "Consider fuel costs, availability, and environmental impact",
                 "required": True,
                 "options": [
-                    "Petrol",
-                    "Diesel",
-                    "CNG",
-                    "Electric",
-                    "Hybrid",
-                    "No preference"
+                    "Petrol (easy maintenance)",
+                    "Diesel (better mileage for long drives)",
+                    "CNG (most economical)",
+                    "Electric (eco-friendly, low running cost)",
+                    "Hybrid (best of both worlds)",
+                    "No preference (show me all options)"
                 ],
-                "help_text": "Different fuel types have different benefits and costs"
+                "help_text": "💡 Different fuel types have different benefits and costs"
             },
             {
                 "id": "important_features",
@@ -101,18 +102,18 @@ class CarQuestionnaire:
                 "description": "Select all features that matter to you (you can choose multiple)",
                 "required": True,
                 "options": [
-                    "Advanced safety features",
-                    "Air conditioning",
-                    "Good music system",
-                    "Comfortable seating",
-                    "Easy parking (sensors, camera)",
-                    "Fuel efficiency",
-                    "Low maintenance cost",
-                    "Modern technology",
-                    "Large storage space",
-                    "Good ground clearance"
+                    "🛡️ Advanced safety features (airbags, ABS, etc.)",
+                    "❄️ Air conditioning (automatic climate control)",
+                    "🎵 Good music system (touchscreen, bluetooth)",
+                    "🪑 Comfortable seating (adjustable, cushioned)",
+                    "🚗 Easy parking (parking sensors, camera)",
+                    "⛽ Excellent fuel efficiency",
+                    "🔧 Low maintenance cost",
+                    "📱 Modern technology (navigation, smartphone connectivity)",
+                    "🎒 Large boot/storage space",
+                    "🏔️ Good ground clearance (for rough roads)"
                 ],
-                "help_text": "Select features that are important to you"
+                "help_text": "💡 We'll prioritize cars that have your preferred features"
             },
             {
                 "id": "physical_considerations",
@@ -121,15 +122,15 @@ class CarQuestionnaire:
                 "description": "This helps us recommend cars with appropriate accessibility features",
                 "required": False,
                 "options": [
-                    "Easy entry/exit",
-                    "Light steering",
-                    "Good visibility",
-                    "Adjustable seat",
-                    "Automatic transmission",
-                    "Simple controls",
-                    "None"
+                    "Need easy entry/exit (higher seating position)",
+                    "Prefer power steering (light steering wheel)",
+                    "Need good visibility (large windows, mirrors)",
+                    "Require comfortable driver seat (adjustable)",
+                    "Need automatic transmission (no clutch)",
+                    "Prefer simple controls (easy-to-reach buttons)",
+                    "None of the above"
                 ],
-                "help_text": "Select any comfort preferences"
+                "help_text": "💡 We can recommend cars designed for comfort and accessibility"
             },
             {
                 "id": "brand_preference",
@@ -138,19 +139,19 @@ class CarQuestionnaire:
                 "description": "Based on your experience or service network preferences",
                 "required": False,
                 "options": [
-                    "Maruti Suzuki",
-                    "Hyundai",
-                    "Tata",
-                    "Honda",
-                    "Toyota",
-                    "Mahindra",
-                    "Kia",
-                    "MG",
-                    "Volkswagen/Skoda",
-                    "Premium brands",
-                    "No preference"
+                    "Maruti Suzuki (largest service network)",
+                    "Hyundai (good features and reliability)",
+                    "Tata (Indian brand with modern cars)",
+                    "Honda (reliable and fuel efficient)",
+                    "Toyota (low maintenance, high resale)",
+                    "Mahindra (SUVs and rugged vehicles)",
+                    "Kia (modern features and warranty)",
+                    "MG (feature-rich cars)",
+                    "Volkswagen/Skoda (European engineering)",
+                    "Premium brands (BMW, Mercedes, Audi)",
+                    "No preference (show me the best options)"
                 ],
-                "help_text": "Choose preferred brands if any"
+                "help_text": "💡 Different brands have different strengths and service networks"
             },
             {
                 "id": "additional_requirements", 
@@ -158,8 +159,8 @@ class CarQuestionnaire:
                 "type": "text_area",
                 "description": "Tell us anything else that's important for your car choice",
                 "required": False,
-                "placeholder": "Any additional preferences or requirements...",
-                "help_text": "Optional additional information"
+                "placeholder": "E.g., 'Need a car that's easy to maintain', 'Must have good resale value', 'Prefer cars with local service center', etc.",
+                "help_text": "💡 This helps our AI provide more personalized recommendations"
             }
         ]
     
@@ -315,8 +316,8 @@ class CarQuestionnaire:
 
 def display_questionnaire():
     """Main function to display the questionnaire"""
-    st.markdown("## Car Questionnaire")
-    st.markdown("Answer a few questions to get personalized recommendations")
+    st.markdown("## 📝 Car Finder Questionnaire")
+    st.markdown("### *Let's find your perfect car in just a few steps!*")
     
     # Initialize questionnaire
     questionnaire = CarQuestionnaire()
@@ -347,13 +348,13 @@ def display_questionnaire():
     
     with col1:
         if current_step > 0:
-            if st.button("Previous", key="prev_btn"):
+            if st.button("⬅️ Previous", key="prev_btn", help="Go to previous question"):
                 st.session_state.questionnaire_step -= 1
                 st.rerun()
     
     with col3:
-        if st.button("Next" if current_step < len(questionnaire.questions) - 1 else "Complete", 
-                    key="next_btn"):
+        if st.button("Next ➡️" if current_step < len(questionnaire.questions) - 1 else "Complete ✅", 
+                    key="next_btn", help="Continue to next question"):
             
             # Validate answer
             if questionnaire.validate_answer(current_question, answer):
@@ -364,7 +365,7 @@ def display_questionnaire():
                 st.session_state.questionnaire_step += 1
                 st.rerun()
             else:
-                st.error("Please answer this required question before proceeding.")
+                st.error("❌ **Please answer this required question before proceeding.**")
     
     with col2:
         st.markdown(f"<div style='text-align: center; padding-top: 8px;'>Question {current_step + 1} of {len(questionnaire.questions)}</div>", 
@@ -372,16 +373,16 @@ def display_questionnaire():
 
 def display_completion_page(questionnaire: CarQuestionnaire):
     """Display questionnaire completion page"""
-    st.markdown("## Questionnaire Complete!")
-    st.markdown("Thank you for providing your preferences.")
+    st.markdown("## 🎉 Questionnaire Complete!")
+    st.markdown("### Thank you for providing your preferences!")
     
     # Display summary
-    st.markdown("### Your Preferences:")
+    st.markdown("### 📋 Your Preferences Summary:")
     summary = questionnaire.get_completion_summary()
-    st.info(summary)
+    st.success(summary)
     
     # Show detailed preferences
-    with st.expander("View All Preferences"):
+    with st.expander("📊 View Detailed Preferences"):
         prefs = st.session_state.user_preferences
         for key, value in prefs.items():
             if key.endswith('_min') or key.endswith('_max'):
@@ -389,19 +390,25 @@ def display_completion_page(questionnaire: CarQuestionnaire):
             st.write(f"**{key.replace('_', ' ').title()}:** {value}")
     
     # Action buttons
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("Retake Quiz", key="retake_quiz"):
+        if st.button("🔄 Retake Quiz", key="retake_quiz", help="Start questionnaire over"):
             # Clear preferences and reset
             st.session_state.user_preferences = {}
             st.session_state.questionnaire_step = 0
             st.rerun()
     
     with col2:
-        if st.button("Get Recommendations", key="get_recommendations"):
+        if st.button("🚗 Get Recommendations", key="get_recommendations", 
+                    help="Generate AI recommendations based on your preferences"):
             st.session_state.show_recommendations = True
-            st.success("Generating recommendations based on your preferences...")
+            st.success("🎯 **Generating your personalized car recommendations...**")
+            st.info("💡 **Tip:** This may take a moment as our AI analyzes your preferences against our car database.")
+    
+    with col3:
+        if st.button("💬 Ask AI Expert", key="ask_expert", help="Chat with our AI car expert"):
+            st.info("🚧 **Coming Soon:** AI Chat feature will be available shortly!")
 
 if __name__ == "__main__":
     display_questionnaire()
