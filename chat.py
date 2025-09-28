@@ -20,14 +20,14 @@ class AICarExpert:
         self.client = None
         self._initialize_openai()
         self.conversation_starters = [
-            "Which car would be best for a 65-year old with knee problems?",
+            "What car should I buy for daily commuting?",
             "What's the difference between petrol and diesel cars?",
-            "Which cars have the best safety features for seniors?",
-            "How do I choose between automatic and manual transmission?",
-            "What should I consider for maintenance costs?",
-            "Which cars are easiest to get in and out of?",
+            "Which cars have the best safety features?",
+            "Should I choose automatic or manual transmission?",
+            "What are typical maintenance costs?",
             "What's the most fuel-efficient car in my budget?",
-            "Which brands have the best service network in India?"
+            "Which brands have the best service network in India?",
+            "How do I choose between sedan and SUV?"
         ]
     
     def _initialize_openai(self):
@@ -77,43 +77,38 @@ class AICarExpert:
     
     def _create_system_prompt(self, user_context: Dict = None) -> str:
         """Create system prompt for AI car expert"""
-        base_prompt = """You are a friendly, knowledgeable car consultant specializing in helping senior buyers (60+ years) choose the perfect car in India. You have extensive knowledge of all car brands available in the Indian market including Maruti Suzuki, Hyundai, Tata, Honda, Toyota, Mahindra, Kia, MG, BMW, Mercedes, and many others.
+        base_prompt = """You are a knowledgeable car consultant helping people choose the right car in India. You have extensive knowledge of all car brands available in the Indian market including Maruti Suzuki, Hyundai, Tata, Honda, Toyota, Mahindra, Kia, MG, BMW, Mercedes, and many others.
 
 Your expertise includes:
-- Senior-friendly features and accessibility considerations
 - Indian road conditions and driving patterns
 - Maintenance costs, fuel efficiency, and service networks
 - Safety features and reliability ratings
 - Price comparisons and value for money
-- Physical accessibility for senior drivers
+- Different car categories (hatchback, sedan, SUV, etc.)
 
 Always prioritize:
-🛡️ Safety and reliability above all
-🪑 Comfort and ease of access
-🔧 Low maintenance and service availability
-💰 Value for money and fuel efficiency
-🎯 Simple, user-friendly features
+- Safety and reliability
+- Comfort and practicality
+- Maintenance and service availability
+- Value for money and fuel efficiency
+- User-specific requirements
 
 Communication style:
-- Use simple, clear language (avoid technical jargon)
-- Be patient and thorough in explanations
+- Use clear, professional language
+- Be thorough but concise in explanations
 - Provide specific car model recommendations when appropriate
-- Always explain WHY something is recommended for seniors
-- Use emojis to make responses friendly and easy to read
-- Break down complex information into digestible points"""
+- Always explain the reasoning behind recommendations
+- Focus on practical advice"""
         
         if user_context:
             context_info = f"""
 
 USER CONTEXT:
-Budget Range: ₹{user_context.get('budget_min', 'Not specified'):,} - ₹{user_context.get('budget_max', 'Not specified'):,}
+Budget: ₹{user_context.get('budget_min', 'Not specified'):,} - ₹{user_context.get('budget_max', 'Not specified'):,}
 Primary Use: {user_context.get('primary_use', 'Not specified')}
-Family Size: {user_context.get('family_size', 'Not specified')}
 Fuel Preference: {user_context.get('fuel_preference', 'Not specified')}
-Important Features: {', '.join(user_context.get('important_features', [])) if user_context.get('important_features') else 'Not specified'}
-Physical Considerations: {', '.join(user_context.get('physical_considerations', [])) if user_context.get('physical_considerations') else 'None specified'}
 
-Use this context to provide more personalized advice."""
+Use this context for personalized advice."""
             
             base_prompt += context_info
         
@@ -121,8 +116,7 @@ Use this context to provide more personalized advice."""
 
 def display_chat_interface():
     """Main function to display AI chat interface"""
-    st.markdown("## 💬 Ask Our AI Car Expert")
-    st.markdown("### *Get instant answers to all your car-related questions*")
+    st.markdown("## Chat with AI Car Expert")
     
     # Initialize AI expert
     ai_expert = AICarExpert()
@@ -139,181 +133,65 @@ def display_chat_interface():
         display_welcome_section(ai_expert)
     
     # Chat history display
-    if st.session_state.chat_history:
-        st.markdown("### 💭 **Chat History**")
+    for chat in st.session_state.chat_history:
+        # User message
+        with st.chat_message("user"):
+            st.write(chat['user'])
         
-        # Create a container for chat messages
-        chat_container = st.container()
-        
-        with chat_container:
-            for i, chat in enumerate(st.session_state.chat_history):
-                # User message
-                st.markdown(f"""
-                <div style="background-color: #e3f2fd; padding: 12px; border-radius: 10px; margin: 8px 0; border-left: 4px solid #2196f3;">
-                <strong>🙋 You:</strong><br>{chat['user']}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # AI response
-                st.markdown(f"""
-                <div style="background-color: #f1f8e9; padding: 12px; border-radius: 10px; margin: 8px 0; border-left: 4px solid #4caf50;">
-                <strong>🤖 AI Car Expert:</strong><br>{chat['assistant']}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown("---")
+        # AI response
+        with st.chat_message("assistant"):
+            st.write(chat['assistant'])
     
-    # Chat input section
-    st.markdown("### 💬 **Ask Your Question**")
+    # Chat input
+    user_message = st.chat_input("Ask about cars...")
     
-    # Input methods
-    col1, col2 = st.columns([3, 1])
+    if user_message:
+        # Add user message to chat
+        with st.chat_message("user"):
+            st.write(user_message)
+        
+        # Get AI response
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                ai_response = ai_expert.get_chat_response(
+                    user_message, 
+                    st.session_state.chat_history,
+                    user_context
+                )
+                st.write(ai_response)
+        
+        # Add to chat history
+        st.session_state.chat_history.append({
+            "user": user_message,
+            "assistant": ai_response,
+            "timestamp": time.time()
+        })
     
-    with col1:
-        user_message = st.text_area(
-            "Type your car-related question here:",
-            placeholder="E.g., 'Which automatic car under ₹12 lakhs is best for seniors with joint problems?'",
-            height=100,
-            key="user_input"
-        )
-    
-    with col2:
-        st.markdown("**💡 Quick Tips:**")
-        st.info("Be specific about your needs, budget, and any physical requirements for the best recommendations!")
-        
-        if st.button("🧹 Clear Chat", key="clear_chat", help="Start a fresh conversation"):
-            st.session_state.chat_history = []
-            st.rerun()
-    
-    # Send button
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🚀 Ask AI Expert", key="send_message", help="Get expert advice from our AI"):
-            if user_message.strip():
-                # Show processing message
-                with st.spinner("🤖 **AI Expert is thinking...**"):
-                    # Simulate thinking time
-                    time.sleep(1)
-                    
-                    # Get AI response
-                    ai_response = ai_expert.get_chat_response(
-                        user_message, 
-                        st.session_state.chat_history,
-                        user_context
-                    )
-                    
-                    # Add to chat history
-                    st.session_state.chat_history.append({
-                        "user": user_message,
-                        "assistant": ai_response,
-                        "timestamp": time.time()
-                    })
-                    
-                    # Clear input and refresh
-                    st.session_state.user_input = ""
-                    st.rerun()
-            else:
-                st.warning("⚠️ **Please enter a question before sending.**")
-    
-    # Quick action buttons
-    if st.session_state.chat_history:
-        st.markdown("---")
-        st.markdown("### 🛠️ **Quick Actions**")
-        
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
-            if st.button("📝 Retake Quiz", key="retake_quiz_chat"):
-                st.session_state.user_preferences = {}
-                st.session_state.questionnaire_step = 0
-                st.success("🔄 **Starting fresh questionnaire...**")
-        
-        with col2:
-            if st.button("🚗 View Recommendations", key="view_recs_chat"):
-                if st.session_state.get('recommendations'):
-                    st.success("🎯 **Showing your recommendations...**")
-                else:
-                    st.info("📝 **Please complete the quiz first to get recommendations.**")
-        
-        with col3:
-            if st.button("⚖️ Compare Cars", key="compare_cars_chat"):
-                if st.session_state.get('comparison_cars'):
-                    st.success(f"📊 **Comparing {len(st.session_state.comparison_cars)} cars...**")
-                else:
-                    st.info("🚗 **Please add cars to comparison first.**")
-        
-        with col4:
-            if st.button("📄 Export Chat", key="export_chat"):
-                st.info("🚧 **Chat export coming soon!**")
+    # Clear chat button
+    if st.session_state.chat_history and st.button("Clear Chat"):
+        st.session_state.chat_history = []
+        st.rerun()
 
 def display_welcome_section(ai_expert: AICarExpert):
     """Display welcome section with conversation starters"""
-    st.markdown("""
-    ### 👋 **Welcome to Your Personal AI Car Expert!**
+    st.markdown("### Welcome! Ask me anything about cars.")
     
-    I'm here to help you with all your car-related questions. Whether you're confused about which car to choose, 
-    want to understand different features, or need advice on maintenance - just ask!
-    """)
+    st.markdown("**Common questions:**")
     
-    # Conversation starters
-    st.markdown("### 🎯 **Popular Questions from Senior Buyers:**")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        for i, starter in enumerate(ai_expert.conversation_starters[:4]):
-            if st.button(f"💡 {starter}", key=f"starter_{i}", help="Click to ask this question"):
-                # Add this question to chat
-                user_context = st.session_state.get('user_preferences', {})
-                
-                with st.spinner("🤖 **Getting expert advice...**"):
-                    ai_response = ai_expert.get_chat_response(starter, [], user_context)
-                    
-                    st.session_state.chat_history.append({
-                        "user": starter,
-                        "assistant": ai_response,
-                        "timestamp": time.time()
-                    })
-                    
-                    st.rerun()
-    
-    with col2:
-        for i, starter in enumerate(ai_expert.conversation_starters[4:], 4):
-            if st.button(f"💡 {starter}", key=f"starter_{i}", help="Click to ask this question"):
-                # Add this question to chat
-                user_context = st.session_state.get('user_preferences', {})
-                
-                with st.spinner("🤖 **Getting expert advice...**"):
-                    ai_response = ai_expert.get_chat_response(starter, [], user_context)
-                    
-                    st.session_state.chat_history.append({
-                        "user": starter,
-                        "assistant": ai_response,
-                        "timestamp": time.time()
-                    })
-                    
-                    st.rerun()
-    
-    # Show user context if available
-    user_context = st.session_state.get('user_preferences', {})
-    if user_context:
-        st.markdown("---")
-        st.success("✅ **I have your quiz preferences and can provide personalized advice!**")
-        
-        with st.expander("👁️ Your Quiz Results (helps me give better advice)"):
-            if 'budget' in user_context:
-                budget_min, budget_max = user_context['budget']
-                st.write(f"**Budget:** ₹{budget_min:,} - ₹{budget_max:,}")
+    for i, starter in enumerate(ai_expert.conversation_starters):
+        if st.button(starter, key=f"starter_{i}"):
+            user_context = st.session_state.get('user_preferences', {})
             
-            for key, value in user_context.items():
-                if key not in ['budget', 'budget_min', 'budget_max'] and value:
-                    display_key = key.replace('_', ' ').title()
-                    if isinstance(value, list):
-                        st.write(f"**{display_key}:** {', '.join(value)}")
-                    else:
-                        st.write(f"**{display_key}:** {value}")
-    else:
-        st.info("💡 **Tip:** Complete the Car Finder Quiz first to get more personalized advice!")
+            with st.spinner("Getting advice..."):
+                ai_response = ai_expert.get_chat_response(starter, [], user_context)
+                
+                st.session_state.chat_history.append({
+                    "user": starter,
+                    "assistant": ai_response,
+                    "timestamp": time.time()
+                })
+                
+                st.rerun()
 
 if __name__ == "__main__":
     display_chat_interface()
