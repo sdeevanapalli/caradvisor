@@ -73,6 +73,5 @@ def main():
     with st.sidebar:
         show_logout_button()
 
-
 if __name__ == "__main__":
     main()
