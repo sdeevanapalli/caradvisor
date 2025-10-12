@@ -10,6 +10,7 @@ from plotly.subplots import make_subplots
 from typing import Dict, List, Any
 import numpy as np
 
+
 class CarComparisonEngine:
     """Car comparison and visualization engine"""
     
